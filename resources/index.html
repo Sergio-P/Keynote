@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html ng-app="Keynote">
+<head>
+    <meta charset="UTF-8">
+    <title>PyKeynote</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/default.css">
+    <link rel="stylesheet" href="css/main.css"/>
+    <script src="libs/jquery.min.js"></script>
+    <script src="libs/highlight.pack.js"></script>
+    <script src="libs/angular.min.js"></script>
+    <script src="libs/ui-bootstrap-tpls-1.1.2.min.js"></script>
+    <script src="js/app.js"></script>
+</head>
+<body>
+<div class="main-container" ng-controller="KeynoteController">
+
+    <div class="row top-bar">
+        <div class="col-xs-2 clear-bg full-height">
+            <input type="text" class="discrete full-height full-width text-large" ng-model="file.title"/>
+        </div>
+        <div class="col-xs-7">
+            <a class="img-inline-btn"><img src="gpx/icnew.png"/></a>
+            <a class="img-inline-btn"><img src="gpx/icopen.png"/></a>
+            <a class="img-inline-btn" ng-click="downloadPresentation()"><img src="gpx/icdownload.png"/></a>
+            <a class="img-inline-btn" ng-click="setFullScreen()"><img src="gpx/icplay.png"/></a>
+            <div class="inline-btn-sep"></div>
+            <span class="inline-btn-label">Add: </span>
+            <a class="img-inline-btn" ng-click="addTextBox()"><img src="gpx/icboxtext.png"/></a>
+            <a class="img-inline-btn" ng-click="addImgBox()"><img src="gpx/icboximg.png"/></a>
+            <a class="img-inline-btn" ng-click="addPyBox()"><img src="gpx/icboxpy.png"/></a>
+            <a class="img-inline-btn"><img src="gpx/icboxshape.png"/></a>
+            <a class="img-inline-btn"><img src="gpx/icboxtable.png"/></a>
+        </div>
+        <div class="col-xs-3">
+            <div uib-dropdown class="pull-right">
+              <a class="btn btn-default btn-sm" id="simple-dropdown" uib-dropdown-toggle>
+                  <i class="fa fa-bars"></i>
+              </a>
+              <ul uib-dropdown-menu role="menu" aria-labelledby="simple-dropdown">
+                  <li role="menuitem"><a href="#">Change Session</a></li>
+                  <li role="menuitem"><a href="#">Log out</a></li>
+              </ul>
+            </div>
+            <span class="dev-label pull-right">Sergio Peñafiel - 2016</span>
+            <span class="quad pull-right" style="background: {{statusColor[pyStatus]}}"></span>
+        </div>
+    </div>
+
+    <div class="abs-full-height">
+        <style>{{constructStyle()}}</style>
+        <div class="main-lay full-height">
+            <div id="slide-viewer">
+                <div id="main-slide" ng-class="{'presentation':presenting}">
+                    <div ng-repeat="cmp in file.slides[currentSlide].components" class="slide-cmp {{cmp.style}}"
+                         style="left: {{cmp.x}}px; top: {{cmp.y}}px; width: {{cmp.width}}px; height: {{cmp.height}}px;"
+                         ng-class="{'selected':($index==currentComp)}"
+                         ng-bind-html="getContent(cmp.content,cmp.type) | sanitize">
+                    </div>
+                </div>
+            </div>
+            <div id="timeline">
+                <ul class="slide-list">
+                    <li ng-repeat="sld in file.slides" class="thumb-slide" ng-click="selectSlide($index)" ng-class="{'highlight':($index==currentSlide)}"></li>
+                    <li class="thumb-slide gray" ng-click="addSlide()">
+                        <span class="list-label">Add Slide</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="side-bar full-height">
+            <div id="comp-list" class="mid-height">
+                <h4>Components</h4>
+                <ul class="great-list full-height">
+                    <li ng-repeat="cmp in file.slides[currentSlide].components" ng-click="selectComp($index)" ng-class="{'list-highlight':($index==currentComp)}">
+                        <img ng-src="{{icons[cmp.type]}}" class="icon"/>
+                        <span class="list-label">{{cmp.name}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div id="prop-panel" ng-show="file.slides[currentSlide].components.length > 0">
+                <h4>Properties</h4>
+                <span class="prop-label">Name:</span>
+                <input type="text" ng-model="file.slides[currentSlide].components[currentComp].name" class="form-control inline-form"/>
+                <span class="prop-label">Type:</span>
+                <span class="prop-label">{{file.slides[currentSlide].components[currentComp].type}}</span><br/>
+                <span class="prop-label">Style:</span>
+                <input type="text" ng-model="file.slides[currentSlide].components[currentComp].style" class="form-control inline-form"/>
+                <hr/>
+                <span class="prop-label">X:</span>
+                <input type="number" ng-model="file.slides[currentSlide].components[currentComp].x" class="form-control inline-form"/>
+                <span class="prop-label">Y:</span>
+                <input type="number" ng-model="file.slides[currentSlide].components[currentComp].y" class="form-control inline-form"/>
+                <span class="prop-label">Width:</span>
+                <input type="number" ng-model="file.slides[currentSlide].components[currentComp].width" class="form-control inline-form"/>
+                <span class="prop-label">Height:</span>
+                <input type="number" ng-model="file.slides[currentSlide].components[currentComp].height" class="form-control inline-form"/>
+                <hr/>
+                <div ng-show="file.slides[currentSlide].components[currentComp].type=='text' || file.slides[currentSlide].components[currentComp].type=='py'">
+                    <span class="prop-label">Content:</span>
+                    <textarea ng-model="file.slides[currentSlide].components[currentComp].content" class="form-control" rows="4"></textarea>
+                </div>
+                <div ng-show="file.slides[currentSlide].components[currentComp].type == 'img'">
+                    <span class="prop-label">Resource:</span>
+                    <input ng-model="file.slides[currentSlide].components[currentComp].content" class="form-control">
+                </div>
+                <hr/>
+                <a class="btn btn-danger form-control" ng-click="deleteComp()">Delete Component</a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

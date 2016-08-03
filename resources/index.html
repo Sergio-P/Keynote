@@ -55,7 +55,7 @@
                 <div id="main-slide" ng-class="{'presentation':presenting}">
                     <div ng-repeat="cmp in file.slides[currentSlide].components" class="slide-cmp {{cmp.style}}"
                          style="left: {{cmp.x}}px; top: {{cmp.y}}px; width: {{cmp.width}}px; height: {{cmp.height}}px;"
-                         ng-class="{'selected':($index==currentComp)}"
+                         ng-class="{'selected':($index==currentComp), 'pres':presenting}"
                          ng-bind-html="getContent(cmp.content,cmp.type) | sanitize">
                     </div>
                 </div>

@@ -8,7 +8,7 @@
         <script src="socket.io/socket.io.js"></script>
         <script>
             "use strict";
-            let defscript = "<%= defscript %>";
+            let defscript = "<%= defscript.replace(/\n/g,"\\n") %>";
         </script>
         <script src="js/pytest.js"></script>
     </head>

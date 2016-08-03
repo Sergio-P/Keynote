@@ -120,9 +120,13 @@ app.controller("KeynoteController",function($scope){
             return "<img class='pres-img' src='"+content+"'>";
     };
 
+    self.openShellCont = (cmp) => {
+        console.log(cmp);
+    };
+
     self.openShell = (script) => {
         var encscript = encodeURIComponent(script);
-        window.open(window.location.href+"shell?script="+encscript,"_blank");
+        window.open(window.location.href+"shell?script="+encscript,"","width=800px,height=600px,left=283px,top=50px");
     };
 
     self.setFullScreen = () => {
@@ -209,6 +213,10 @@ app.controller("KeynoteController",function($scope){
     self.highlightCode = () => {
         $('pre code').each(function(i, block) {
             hljs.highlightBlock(block);
+        });
+        $(".pybox").off();
+        $(".pybox").click((e) => {
+            self.openShell($(e.target).text());
         });
     };
 

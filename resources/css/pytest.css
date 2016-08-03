@@ -16,7 +16,7 @@ pre span.blue{
 }
 
 .half-cont{
-    width: calc(50vw - 24px);
+    width: calc(50vw - 32px);
     float: left;
     display: inline-block;
     padding: 12px;

@@ -1,15 +1,5 @@
 import sys
-s = 0
-
-print "N? "
-sys.stdout.flush()
-x = input()
-
-while x>0:
-    s += x
-    print "N? "
-    sys.stdout.flush()
-    x = input()
-
-print "La suma es: "+str(s)
-sys.stdout.flush()
+#Write your code
+for i in range(10):
+  print i
+  sys.stdout.flush()

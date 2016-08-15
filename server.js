@@ -1,7 +1,7 @@
 // CollabHeatMap Server 
 var express = require('express');
 var session = require('express-session');
-var bodyParser = require('body-parser');
+var bb = require('body-parser');
 var socket = require("./socket-config.js");
 var fs = require('fs');
 var PythonShell = require('python-shell');
@@ -15,8 +15,7 @@ var port = 8503;
 var currentPy;
 
 app.use(express.static(__dirname+'/resources'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+bb.extend(app,{upload: true});
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(session({secret: 'ssshhh', saveUninitialized: false, resave: false}));

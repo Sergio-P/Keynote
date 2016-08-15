@@ -20,7 +20,7 @@ app.controller("KeynoteController",function($scope){
                         x: 150,
                         y: 8,
                         width: 500,
-                        height: 42
+                        height: 72
                     },
                     {
                         type: "text",

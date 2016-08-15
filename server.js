@@ -1,7 +1,7 @@
 // CollabHeatMap Server 
 var express = require('express');
 var session = require('express-session');
-var bb = require('body-parser');
+var bb = require('express-busboy');
 var socket = require("./socket-config.js");
 var fs = require('fs');
 var PythonShell = require('python-shell');
